@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Chinese Tutorial</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+    <script type="text/template" id="template">
+        <div class="container">
+            <img src={{info.pic1}} >
+            <img src={{info.strokes1}} style="width:50%;">
+            <p class="xxx">
+                    <b style="font-size:30px;">Meaning:</b>{{info.translate1}}
+                    <br>
+                    <b style="font-size:30px;">Pinyin:</b>{{info.pinyin.p1}}
+            </p>
+                <br>
+
+            <img src={{info.pic2}} >
+            <img src={{info.strokes2}} style="width:50%;">
+            <p class="xxx">
+              <b style="font-size:30px;">Meaning:</b>{{info.translate2}}
+              <br>
+              <b style="font-size:30px;">Pinyin:</b>{{info.pinyin.p2}}
+              <br>
+            </p>
+        <br><br>
+        <div class="combined">
+            <h1 style="font-size:150px;">{{qKey}}</h1>
+            
+            <p style=font-size:20px;>(Tips:Words can have totally different meanings whenthey were combined together) </p>
+            <p class="xxx">
+                <b style="font-size:30px;">Meaning:</b> {{info.tran1_tran2}}
+                <br>
+                <b style="font-size:30px;">Phrase:</b> {{info.phrase.f}}
+                <br>
+                <b style="font-size:30px;">translate:</b> {{info.phrase.t}}
+            </p>
+
+        </div>
+
+        <hr>
+        </div>
+    </script>
+
+    <style>
+      .xxx{
+        font-size: 25px;
+      }
+      .combined{
+          background-color:sandybrown;
+      }
+      body{
+        color:white;
+      }
+    </style>
+    <script>
+      function loadJSON(){
+        $.getJSON("https://chineseturtorial.firebaseio.com/LessonCompare.json",function(datas){
+          data=datas;
+          showStuffPlease();
+        })
+
+        function showStuffPlease(){
+          var build="";
+          var op=document.getElementById("op");
+          var template=document.getElementById("template").innerHTML;
+
+          for(key in data){
+            LessonJSON ={
+              "info": data[key], 
+              "qKey": key,
+            }
+            build+=Mustache.render(template, LessonJSON)
+            
+          }
+          op.innerHTML = build;
+        }
+      }
+    </script>
+</head>
+
+<body  onload="loadJSON()">
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+      <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                <ul class="nav navbar-nav">
+            <li class="navbar-brand" style="font-size:25px;"><span class="glyphicon glyphicon glyphicon-home"></span>跟我学中文</li>
+            <br>
+            <ul class="nav navbar-nav" style="font-size:18px;">
+                <li><a href="homepage.html"> Home</a></li>
+                <li ><a href="color.html">color</a></li>
+                <li class="active"><a href="compare.html">compare</a></li>
+                <li><a href="animal.html">animal</a></li>
+                <li><a href="about.html">About us</a>
+        
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Quiz <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="quiz1.html">Quiz 1</a></li>
+                <li><a href="quiz2.html">Quiz 2</a></li>
+                <li><a href="quiz3.html">Quiz 3</a></li>
+            </ul>
+            </li>
+            </ul>
+        </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+      </div>
+    </nav>
+    <div class="container">
+        <div class="jumbotron">
+        <h1 style="color:black">跟我学汉语</h1> 
+        <p style="color:black"> Get Your Free Chinese Lesson Here</p> 
+        </div>
+    </div>
+    <div id="op" ></div>
+
+    <div class="container">
+      <a style="font-size:25px;background-color:lightgray;" href="quiz2.html">Click here to take the quiz</a>
+    </div>
+
+</body>
+</html>

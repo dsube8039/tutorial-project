@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Color Quiz</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+    <style>
+     
+       body{
+            background-color:skyblue;
+        }
+
+
+
+
+
+    </style>
+
+    <script type="text/template" id="Template">
+        <div class="panel panel-default">
+            <div class="panel-heading"> Question {{qNum}}:  {{info.Question}} </div>
+            <div class="panel-body"> A. {{info.cA}} </div>
+            <div class="panel-body"> B. {{info.cB}} </div>
+            <div class="panel-body"> C. {{info.cC}} </div>
+            <div class="panel-body"> D. {{info.cD}} </div>			
+            <div class="panel-footer">
+                <input type="text" id="{{qKey}}" placeholder="Choice letter">
+               
+            </div>
+        </div>
+    </script>
+
+    <script>
+        var data; //global variable
+
+		function getData(){       	
+			$.getJSON("https://chineseturtorial.firebaseio.com/ColorQuiz.json", function(result){
+				data = result;
+                displayQuestions();	
+			});	
+		}
+	
+		// DISPLAY QUESTIONS
+		function displayQuestions(){
+			var build ="";
+			var template = document.getElementById("Template").innerHTML;  
+			var qNumber =0; // Question number
+		
+			for(var key in data ){
+				qNumber++;
+				quesJSON ={
+					"info": data[key], 
+					"qKey": key,
+					"qNum": qNumber
+				}
+				build += Mustache.render(template, quesJSON);     
+			}
+			document.getElementById("quiz").innerHTML = build;							
+		}                    
+		
+		// CHECK ANSWERS AND CALCULATE SCORE
+		function checkAnswers(){
+			var score = 0;
+			var count = 0;
+			for(var key in data){
+                var correctAns = data[key].answer;
+				var userAns = document.getElementById(key).value;				
+                count++;
+				if (userAns.toUpperCase() == correctAns){
+					score++;
+				}
+                var grd = (score/count * 100).toFixed(0);		
+			}
+			document.getElementById("score").innerHTML = "<h1>You answered " + score + " out of " + count+" questions correctly!<br><br>That's a grade of<b> "+ grd + "%</b></h1>"; 
+		}
+	</script>
+</head>
+<body onload="getData()" id="myPage">
+        <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                <ul class="nav navbar-nav">
+            <li class="navbar-brand" style="font-size:25px;"><span class="glyphicon glyphicon glyphicon-home"></span>跟我学中文</li>
+            <br>
+            <ul class="nav navbar-nav" style="font-size:18px;">
+                <li><a href="homepage.html"> Home</a></li>
+                <li ><a href="color.html">color</a></li>
+                <li><a href="compare.html">compare</a></li>
+                <li><a href="animal.html">animal</a></li>
+                <li><a href="about.html">About us</a>
+        
+            <li class="dropdown active"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Quiz <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li class="active"><a href="quiz1.html">Quiz 1</a></li>
+                <li><a href="quiz2.html">Quiz 2</a></li>
+                <li><a href="quiz3.html">Quiz 3</a></li>
+            </ul>
+            </li>
+            </ul>
+        </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+                </div>
+            </nav>
+            <h1>Quiz 1</h1>
+                <h1>Enter your choices below. Then press "Score Quiz"</h1>
+                
+                <div id="quiz"></div>
+                    <button onclick="checkAnswers()" type="button" class="btn btn-success btn-lg">SCORE QUIZ</button>
+                <div id="score"></div>
+
+</body>
+</html>
